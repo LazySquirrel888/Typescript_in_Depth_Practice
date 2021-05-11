@@ -614,11 +614,89 @@ function showHello(divName: string, name: string) {
 
 // 1. async logSearchResults() implemented
 // 2.
-console.log('Start');
-logSearchResults(Category.JavaScript)
-    .then(data => console.log(data.length))
-    .catch(err => console.log(err));
+// console.log('Start');
+// logSearchResults(Category.JavaScript)
+//     .then(data => console.log(data.length))
+//     .catch(err => console.log(err));
+//
+// logSearchResults(Category.Software)
+//     .then(data => console.log(data.length))
+//     .catch(err => console.log(err));
 
-logSearchResults(Category.Software)
-    .then(data => console.log(data.length))
-    .catch(err => console.log(err));
+// Task MyTask
+// 01 - Enum As Object Keys
+// Реализовать функцию getSizeDescriptions(), которая будет возвращать объект TShirtSizes.
+// Ключами данного объекта могут быть только обозначения размеров:
+// XS, S, M, L, XL
+// а значениями - соответственно, полные названия размеров:
+// 'extra small', 'small', 'medium', 'large', 'extra large'
+// Для обозначения типа возвращаемого значения использовать enum
+
+enum Size { XS, S, M, L, XL};
+
+function getSizeDescriptions(): Record<Size, string> {
+    return {
+        [Size.XS]: 'extra small',
+        [Size.S]: ' small',
+        [Size.M]: 'medium',
+        [Size.L]: 'large',
+        [Size.XL]: 'extra large'
+    };
+}
+console.log(getSizeDescriptions());
+
+// 02 - Type Guards
+// 1. Реализовать интерфейс Weather c полями  temperature: number, humidity: number, wind: number
+// 2. Реализовать интерфейсы особых погодных условий - туман (Fog) и дождь (Rain),
+// содержащих все свойства интерфейса Weather, а также свойство:
+// - видимость (visibility: number) для тумана и
+// - интенсивность (intensity: string) для дождя
+// 3. Реализовать функцию generateWeatherWarning(), которая будет принимать погодное условие
+// (туман или дождь) в качестве параметра и в зависимости от типа переданного параметра
+// выводить в консоль соответствующее предупреждение:
+// `Warning: due to the fog visibility is <указать видимость> m.`- в случае тумана
+// `Warning: <указать интенсивность> rains are possible.` - в случае дождя
+// 4. Реализовать type guard conditionIsFog для использования в функции generateWeatherWarning()
+// 5. Создать объекты типа Fog и Rain и попробовать запустить функцию generateWeatherWarning(), передав
+// ей разные типы объектов
+
+interface Weather {
+    temperature: number;
+    humidity: number;
+    wind: number;
+}
+interface Fog extends Weather {
+    visibility: number;
+}
+
+interface Rain extends Weather {
+    intensity: string;
+}
+
+function conditionIsFog(weatherCondition: Fog | Rain): weatherCondition is Fog {
+    return 'visibility' in weatherCondition;
+}
+
+function generateWeatherWarning(weatherCondition: Fog | Rain): void {
+    if(conditionIsFog(weatherCondition)) {
+        console.log(`Warning: due to the fog visibility is ${weatherCondition.visibility} m.`);
+    } else {
+        console.log(`Warning: ${weatherCondition.intensity} rains are possible.`);
+    }
+}
+
+const fog: Fog = {
+    temperature: 17,
+    humidity: 98,
+    wind: 2,
+    visibility: 3
+};
+generateWeatherWarning(fog);
+
+const rain: Rain = {
+    temperature: 17,
+    humidity: 98,
+    wind: 2,
+    intensity: 'heavy'
+};
+generateWeatherWarning(rain);
